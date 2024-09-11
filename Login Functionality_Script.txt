@@ -1,0 +1,94 @@
+package germanyiscalling_Assignment;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
+import java.time.Duration;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.openqa.selenium.By;
+
+
+
+public class LoginTests {  
+	
+	public String baseUrl="https://app.germanyiscalling.com/";
+	
+	public WebDriver driver;
+	
+	@BeforeTest
+	public void setup() {
+
+	System.out.println("Before Test executed");
+
+	// TODO Auto-generated method stub 
+	
+	driver=new ChromeDriver();
+
+	driver.manage().window().maximize();     //maximize windows
+
+	driver.get(baseUrl); //open url 
+
+	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));	
+	}
+	
+	@Test(priority = 2)  // Test 1: Successful Login
+	
+	public void successfulLoginTest() throws InterruptedException {   
+
+
+	driver.findElement(By.id("username")).sendKeys("Chandrasaumya@1gmail.com"); 
+	
+	driver.findElement(By.id("password")).sendKeys("Saumya@123");
+
+	driver.findElement(By.xpath("//button[@type='submit']")).submit(); 
+	 
+
+	// Verify if the login is successful by checking the page title
+
+	String pageTitle = driver.getTitle(); 
+	
+	AssertJUnit.assertEquals("Upload your CV | Germany Is Calling", pageTitle);
+	
+	Thread.sleep(1200);
+	}
+	
+	
+	
+	@Test(priority = 1)   //Test 2: Unsuccessful Login
+	public void unsuccessfulLoginTest() throws InterruptedException {
+
+	driver.findElement(By.id("username")).sendKeys("Chandrasamya@1gmail.com");
+
+	driver.findElement(By.id("password")).sendKeys("Saumya3");
+
+	driver.findElement(By.xpath("//button[@type='submit']")).submit(); 
+	
+	String message_expected = "Please enter a correct username and password. Note that both fields may be case-sensitive.";
+
+	String message_actual = driver.findElement(By.xpath("//div[@class='alert alert-danger']")).getText();
+
+	// Check if the error message is displayed
+
+	AssertJUnit.assertEquals(message_expected, message_actual);
+
+	Thread.sleep(1200);
+}
+
+	
+	@AfterTest
+	public void tearDown() throws InterruptedException
+
+	{
+
+	Thread.sleep(120); 
+
+	driver.close();
+
+	
+
+	}
+	}
+
+
+
